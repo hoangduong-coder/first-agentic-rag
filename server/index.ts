@@ -15,15 +15,18 @@ const checkPointer = new MemorySaver();
 
 const app = newWorkflow.compile({ checkpointer: checkPointer });
 
-const finalMessages = app.invoke(
-  {
-    messages: [
-      new HumanMessage({ content: "What are TypeScript primitive types" }),
-    ],
-  },
-  {
-    configurable: { thread_id: 42 },
-  }
-);
+async function main() {
+  const finalMessages = await app.invoke(
+    {
+      messages: [
+        new HumanMessage({ content: "What is TypeScript class?" }),
+      ],
+    },
+    {
+      configurable: { thread_id: 42 },
+    }
+  );
+  console.log(finalMessages.messages[finalMessages.messages.length - 1]["content"]);
+}
 
-console.log(finalMessages["messages"]);
+main();

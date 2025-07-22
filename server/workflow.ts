@@ -24,7 +24,7 @@ export const Workflow = (
   };
 
   const model = new ChatOpenAI({
-    model: "gpt-4o-mini",
+    model: "gpt-4.1-nano",
     temperature: 0,
     apiKey: apiKey,
   }).bindTools(tools);
