@@ -1,32 +1,16 @@
-import { ContextRetriever } from "./tools";
-import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { Workflow } from "./workflow";
-import { MemorySaver } from "@langchain/langgraph";
-import { HumanMessage } from "@langchain/core/messages";
+import express from "express";
+import { createChat } from "./service";
+import { errorHandler } from "./errorHandler";
+import config from "./config";
 
-const contextRetriever = new ContextRetriever(
-  "https://www.typescriptlang.org/docs/handbook/"
-);
-const tools = [contextRetriever];
-const toolNode = new ToolNode(tools);
+const app = express();
 
-const newWorkflow = Workflow(tools, toolNode);
-const checkPointer = new MemorySaver();
+app.use(express.json());
 
-const app = newWorkflow.compile({ checkpointer: checkPointer });
+app.post("/api/chat", createChat);
 
-async function main() {
-  const finalMessages = await app.invoke(
-    {
-      messages: [
-        new HumanMessage({ content: "What is TypeScript class?" }),
-      ],
-    },
-    {
-      configurable: { thread_id: 42 },
-    }
-  );
-  console.log(finalMessages.messages[finalMessages.messages.length - 1]["content"]);
-}
+app.use(errorHandler);
 
-main();
+app.listen(config.port, () => {
+  console.log(`Server is running on port ${config.port}`);
+});

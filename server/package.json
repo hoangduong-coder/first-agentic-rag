@@ -19,11 +19,13 @@
     "@langchain/core": "^0.3.66",
     "@langchain/langgraph": "^0.3.10",
     "@langchain/openai": "^0.6.2",
+    "@types/uuid": "^10.0.0",
     "chromadb": "^3.0.9",
     "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "html-to-text": "^9.0.5",
     "jsdom": "^26.1.0",
-    "langsmith": "^0.3.46"
+    "langsmith": "^0.3.46",
+    "uuid": "^11.1.0"
   }
 }

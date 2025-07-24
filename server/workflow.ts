@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import {
   END,
   START,
@@ -9,10 +8,9 @@ import {
 import { ContextRetriever } from "./tools";
 import { ChatOpenAI } from "@langchain/openai";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
+import config from "./config";
 
-const apiKey: string = process.env.OPENAI_API_KEY || "";
-
-export const Workflow = (
+export const workflow = (
   tools: ContextRetriever[],
   toolNode: ToolNode<any>
 ) => {
@@ -26,7 +24,7 @@ export const Workflow = (
   const model = new ChatOpenAI({
     model: "gpt-4.1-nano",
     temperature: 0,
-    apiKey: apiKey,
+    apiKey: config.openaiApiKey,
   }).bindTools(tools);
 
   const callModel = async (state: typeof MessagesAnnotation.State) => {
