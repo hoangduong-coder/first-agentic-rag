@@ -1,11 +1,15 @@
 import express from "express";
-import { createChat } from "./service";
+import { createChat, getChatSession, healthCheck } from "./service";
 import { errorHandler } from "./errorHandler";
 import config from "./config";
 
 const app = express();
 
 app.use(express.json());
+
+app.get("/api", healthCheck);
+
+app.get("/api/get-chat", getChatSession)
 
 app.post("/api/chat", createChat);
 
