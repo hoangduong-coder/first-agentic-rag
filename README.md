@@ -5,8 +5,8 @@
 - Tools: TypeScript, LangGraph, OpenAI
 
 ### How to start
-For the server
 ```
-cd server && npm install
+cd <replace-either-client-or-server> && npm install
 npm run dev
 ```
+
