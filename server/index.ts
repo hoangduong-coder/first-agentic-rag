@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { createChat, getChatSession, healthCheck } from "./service";
 import { errorHandler } from "./errorHandler";
 import config from "./config";
@@ -6,6 +7,8 @@ import config from "./config";
 const app = express();
 
 app.use(express.json());
+
+app.use(cors());
 
 app.get("/api", healthCheck);
 

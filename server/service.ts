@@ -32,6 +32,8 @@ export const createChat = async (
   next: NextFunction
 ) => {
   try {
+    console.log("Starting chat request...");
+    
     const tsContextRetriever = new ContextRetriever("https://www.typescriptlang.org/docs/handbook/");
     const nodeContextRetriever = new ContextRetriever("https://blog.logrocket.com/express-typescript-node/");
     
@@ -51,9 +53,10 @@ export const createChat = async (
     
     const { query } = req.body;
 
+    console.log("Processing query:", query);
     chatSession.push({ role: "human", content: query });
     agentMessages.push(new HumanMessage(`
-      Please provide a helpful message for this query: ${query}
+      Please provide a helpful response for this query: ${query}
       If you're unsure, just achknowledge the question and ask for verification question if it's helpful. 
       If you don't know the answer, say you don't know. Don't try to make up an answer.
     `))
@@ -67,8 +70,13 @@ export const createChat = async (
       }
     );
 
-    const aiContent =
+    let aiContent =
       finalMessages.messages[finalMessages.messages.length - 1]["content"];
+
+    if (!aiContent || (typeof aiContent === "string" && aiContent.trim() === "")) {
+      aiContent = "I understand your question, but I'm having trouble generating a response right now. Could you please rephrase your question or try asking something else?";
+      console.log("Using fallback response");
+    }
 
     chatSession.push({ role: "ai", content: aiContent });
 
