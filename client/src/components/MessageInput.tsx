@@ -12,7 +12,6 @@ const MessageInput = ({ onSend }: { onSend: (query: string) => void }) => {
 
   return (
     <div className="message-input-container">
-      <div className="message-chat-area">
         <input
           placeholder="Type your message here"
           value={text}
@@ -29,12 +28,8 @@ const MessageInput = ({ onSend }: { onSend: (query: string) => void }) => {
             }
           }}
         >
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=send"
-          />
+          <span className="material-symbols-outlined">send</span>
         </button>
-      </div>
     </div>
   );
 };
