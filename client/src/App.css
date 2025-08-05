@@ -11,7 +11,7 @@
 .chat-window {
   flex: 1;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
 }
 
 .sidebar {
@@ -43,7 +43,7 @@
 
 .chat-window-body{
   flex: 1;
-  padding: 2rem;
+  padding: 2rem 4rem;
   background: #f7f8fa;
   overflow-y: auto;
 }
@@ -61,23 +61,33 @@
 }
 
 .right-message-bubble {
-  background: #E6F7FF;
+  background: #b2e7ff;
   color: #333;
   padding: 1rem;
   border-radius: 1rem;
   max-width: 60%;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05)
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  text-align: left;
 }
 
 .left-message-bubble {
   color: #333;
   padding: 1rem;
   max-width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  text-align: left;
+  line-height: 2;
+}
+
+.left-message-bubble ul {
+  padding-left: 1.2rem;
 }
 
 .message-input-container {
   display: flex;
-  padding: 1rem;
+  padding: 2rem 4rem;
   border-top: 1px solid #eee;
   background: #fff
 }
@@ -85,13 +95,13 @@
 .message-input-body {
   flex: 2;
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem 1rem;
   border-radius: 1rem;
   border: 1px solid #ddd
 }
 
 .button {
-  margin-left: 1rem;
+  margin-inline: 2rem;
   padding: 1rem;
   border-radius: 50%;
 }

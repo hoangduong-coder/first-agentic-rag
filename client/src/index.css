@@ -33,9 +33,11 @@
 }
 
 .material-symbols-outlined {
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+input {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-size: medium;
+  color: #242424;
 }
