@@ -36,8 +36,9 @@ export const createChat = async (
     
     const tsContextRetriever = new ContextRetriever("https://www.typescriptlang.org/docs/handbook/");
     const nodeContextRetriever = new ContextRetriever("https://blog.logrocket.com/express-typescript-node/");
+    const reactContextRetriever = new ContextRetriever("https://www.typescriptlang.org/docs/handbook/react.html");
     
-    const tools = [tsContextRetriever, nodeContextRetriever];
+    const tools = [tsContextRetriever, nodeContextRetriever, reactContextRetriever];
     const toolNode = new ToolNode(tools);
 
     const newWorkflow = workflow(tools, toolNode);
@@ -55,11 +56,7 @@ export const createChat = async (
 
     console.log("Processing query:", query);
     chatSession.push({ role: "human", content: query });
-    agentMessages.push(new HumanMessage(`
-      Please provide a helpful response for this query: ${query}
-      If you're unsure, just achknowledge the question and ask for verification question if it's helpful. 
-      If you don't know the answer, say you don't know. Don't try to make up an answer.
-    `))
+    agentMessages.push(new HumanMessage(query))
 
     const finalMessages = await app.invoke(
       {
@@ -73,10 +70,10 @@ export const createChat = async (
     let aiContent =
       finalMessages.messages[finalMessages.messages.length - 1]["content"];
 
-    if (!aiContent || (typeof aiContent === "string" && aiContent.trim() === "")) {
-      aiContent = "I understand your question, but I'm having trouble generating a response right now. Could you please rephrase your question or try asking something else?";
-      console.log("Using fallback response");
-    }
+    // if (!aiContent || (typeof aiContent === "string" && aiContent.trim() === "")) {
+    //   aiContent = "I understand your question, but I'm having trouble generating a response right now. Could you please rephrase your question or try asking something else?";
+    //   console.log("Using fallback response");
+    // }
 
     chatSession.push({ role: "ai", content: aiContent });
 
