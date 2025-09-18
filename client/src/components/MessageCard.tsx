@@ -4,7 +4,6 @@ import type { Messages } from "../types";
 import { ThreeDots } from "react-loading-icons";
 
 const MessageCard = ({ message }: { message: Messages }) => {
-  console.log(message)
   const [stopLoading, setStopLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
