@@ -3,9 +3,17 @@ import ReactMarkdown from "react-markdown";
 import type { Messages } from "../types";
 import { ThreeDots } from "react-loading-icons";
 
-const MessageCard = ({ message }: { message: Messages }) => {
+interface MessageCardProps {
+  message: Messages;
+  onTextChange?: () => void;
+}
+
+const MessageCard = ({ message, onTextChange }: MessageCardProps) => {
   const [stopLoading, setStopLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  
+  const [currentText, setCurrentText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (typeof message.content !== "string") {
@@ -27,6 +35,21 @@ const MessageCard = ({ message }: { message: Messages }) => {
     }
   }, [message]);
 
+  useEffect(() => {
+    if (stopLoading && typeof message.content === "string" ) {
+      if (currentIndex < message.content.length) {
+        const timeout = setTimeout(() => {
+          setCurrentText(prevText => prevText + message.content[currentIndex]);
+          setCurrentIndex(prevIndex => prevIndex + 1);
+          // Trigger scroll update after each character is added
+          onTextChange?.();
+        }, 2);
+
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [stopLoading, message, currentIndex, onTextChange])
+
   return (
     <div
       className={`${
@@ -43,7 +66,7 @@ const MessageCard = ({ message }: { message: Messages }) => {
             <>
               <ReactMarkdown>
                 {typeof message.content === "string"
-                  ? message.content
+                  ? currentText
                   : "No answer generated."}
               </ReactMarkdown>
               {errorMessage.trim() !== "" && (
