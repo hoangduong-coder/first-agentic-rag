@@ -6,8 +6,10 @@ import {
   AIMessage,
   HumanMessage,
   MessageContent,
+  SystemMessage,
 } from "@langchain/core/messages";
 import { NextFunction, Request, Response } from "express";
+import { systemPrompt } from "./prompt";
 
 // Model
 interface Messages {
@@ -32,13 +34,12 @@ export const createChat = async (
   next: NextFunction
 ) => {
   try {
-    console.log("Starting chat request...");
-    
     const tsContextRetriever = new ContextRetriever("https://www.typescriptlang.org/docs/handbook/");
     const nodeContextRetriever = new ContextRetriever("https://blog.logrocket.com/express-typescript-node/");
     const reactContextRetriever = new ContextRetriever("https://www.typescriptlang.org/docs/handbook/react.html");
+    const fullstackContextRetriever = new ContextRetriever("https://fullstackopen.com/en/");
     
-    const tools = [tsContextRetriever, nodeContextRetriever, reactContextRetriever];
+    const tools = [tsContextRetriever, nodeContextRetriever, reactContextRetriever, fullstackContextRetriever];
     const toolNode = new ToolNode(tools);
 
     const newWorkflow = workflow(tools, toolNode);
@@ -46,15 +47,24 @@ export const createChat = async (
 
     const app = newWorkflow.compile({ checkpointer: checkPointer });
 
-    const agentMessages = chatSession.map((message) =>
-      message.role === "human"
-        ? new HumanMessage({ content: message.content })
-        : new AIMessage({ content: message.content })
+    const agentMessages: Array<HumanMessage | AIMessage | SystemMessage> = [];
+
+    agentMessages.push(
+      new SystemMessage(systemPrompt)
     );
+
+    if (chatSession.length !== 0) {
+      for (const message of chatSession) {
+        if (message.role === "human") {
+          agentMessages.push(new HumanMessage({ content: message.content }));
+        } else {
+          agentMessages.push(new AIMessage({ content: message.content }));
+        }
+      }
+    }
     
     const { query } = req.body;
 
-    console.log("Processing query:", query);
     chatSession.push({ role: "human", content: query });
     agentMessages.push(new HumanMessage(query))
 
@@ -67,13 +77,7 @@ export const createChat = async (
       }
     );
 
-    let aiContent =
-      finalMessages.messages[finalMessages.messages.length - 1]["content"];
-
-    // if (!aiContent || (typeof aiContent === "string" && aiContent.trim() === "")) {
-    //   aiContent = "I understand your question, but I'm having trouble generating a response right now. Could you please rephrase your question or try asking something else?";
-    //   console.log("Using fallback response");
-    // }
+    const aiContent = finalMessages.messages[finalMessages.messages.length - 1]["content"];
 
     chatSession.push({ role: "ai", content: aiContent });
 
